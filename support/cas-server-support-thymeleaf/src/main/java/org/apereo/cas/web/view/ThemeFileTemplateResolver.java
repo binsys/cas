@@ -33,7 +33,11 @@ public class ThemeFileTemplateResolver extends FileTemplateResolver {
     protected ITemplateResource computeTemplateResource(final IEngineConfiguration configuration, final String ownerTemplate,
                                                         final String template, final String resourceName, final String characterEncoding,
                                                         final Map<String, Object> templateResolutionAttributes) {
-        val themeName = getCurrentTheme();
+        String themeName = getCurrentTheme();
+        if (StringUtils.isEmpty(themeName)) {
+            // fallback to default theme
+            themeName = super.getCasProperties().getTheme().getDefaultThemeName();
+        }
         if (StringUtils.isNotBlank(themeName)) {
             val themeTemplate = String.format(resourceName, themeName);
             LOGGER.trace("Computing template resource [{}]...", themeTemplate);
